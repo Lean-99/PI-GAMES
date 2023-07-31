@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('Videogame', {
+  sequelize.define('Videogames', {
     id: {
       type: DataTypes.UUID, // ALFA-NUMERICO: ASD181D-SAD1811-ASD181
       primaryKey: true, 
@@ -12,6 +12,13 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      validate: {
+        len: {
+          args: [5,20],
+          msg: 'The name must have a minimum of 5 and a maximum of 10 characters'
+        }
+      }
     },
     description: {
       type: DataTypes.STRING,
@@ -26,12 +33,12 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     released: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false 
     },
     rating: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
     }
   },{ freezeTableName: true, timestamps: false });
 };

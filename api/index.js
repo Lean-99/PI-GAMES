@@ -19,9 +19,11 @@
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const server = require('./src/app.js');
 const { conn } = require('./src/db.js');
+const loadGenresDb = require('./src/services/loadGenres.js'); 
 
 // Syncing all the models at once.
-conn.sync({ force: true }).then(() => {
+conn.sync({ alter: true }).then( async () => {
+  await loadGenresDb(); 
   server.listen(3001, () => {
     console.log('Listening on Port 3001 ✔️'); // eslint-disable-line no-console
   });

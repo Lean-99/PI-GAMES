@@ -1,4 +1,16 @@
-const { allInfo, getGamesId } = require('../controllers/gamesControllers');
+const { allInfo, getGamesId, createGamesController } = require('../controllers/gamesControllers');
+
+
+const createGamesHandler = async (req, res) => {
+    const { name, description, platforms, background_image, released, rating } = req.body; 
+    
+    try {
+        const response = await createGamesController(name, description, platforms, background_image, released, rating); 
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(400).json({error: error.message}); 
+    }
+}; 
 
 
 const getGamesHandler = async (req, res) => {
@@ -33,5 +45,6 @@ const getGamesIdHandler = async (req, res) => {
 
 module.exports = {
     getGamesHandler,
-    getGamesIdHandler
+    getGamesIdHandler,
+    createGamesHandler
 };

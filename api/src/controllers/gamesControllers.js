@@ -1,12 +1,32 @@
 const axios = require('axios'); 
-const { Videogame, Genres } = require('../db'); 
+const { Videogames, Genres } = require('../db'); 
 const { API_KEY } = process.env;
+
+
+// PARA CREAR VIDEOGAMES.
+const createGamesController = async (name, description, platforms, background_image, released, rating) => {
+    const newGame = await Videogames.create({name, description, platforms,background_image, released, rating});
+
+    if(!name || !description || !platforms || !background_image || !released || !rating) {
+        throw new Error('All fields are required');
+    }
+
+    return newGame;  
+};  
 
 
 // PARA TRAER INFO POR ID.
 const getGamesId = async (id) => {
     if(isNaN(id)) {
-        const gameDb = await Videogame.findByPk(id);
+        const gameDb = await Videogames.findByPk(id, {
+            include: {
+                model: Genres,
+                attributes: ['name'],
+                through: {
+                    attributes: []
+                }
+            }
+        });
         return gameDb;
     }
 
@@ -41,12 +61,15 @@ const getGamesApi = async () => {
 
 // PARA TRAER INFO DE LA DB.
 const getGamesDb =  async () => {
-    const games = await Videogame.findAll({
+    const games = await Videogames.findAll({
         include: {
             model: Genres,
-            attributes: ['name', 'id']
+            attributes: ['name'],
+            through: {
+                attributes: []
+            }
         }
-    }); 
+    });
 
     return games; 
 }; 
@@ -74,5 +97,6 @@ const allInfo = async (name) => {
 
 module.exports = {
     allInfo,
-    getGamesId
+    getGamesId,
+    createGamesController
 };
