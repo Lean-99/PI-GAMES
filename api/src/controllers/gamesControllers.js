@@ -29,19 +29,71 @@ const getGamesId = async (id) => {
         });
         return gameDb;
     }
+    
+    const peticion = (await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)).data; 
+    console.log('PETICION', peticion);
+    const infoApi = peticion; 
 
-    const gameApi = await getGamesApi(); 
-    //console.log(id);
-    const gameId = gameApi.find(obj => obj.id == id); 
+    const infoGame = {
+        id: infoApi.id,
+        name: infoApi.name,
+        description: infoApi.description,
+        platforms: infoApi.parent_platforms,
+        background_image: infoApi.background_image,
+        released: infoApi.released,
+        rating: infoApi.rating,
+        genres: infoApi.genres
+    };
 
-    if(!gameId) throw new Error(`The game with the id: ${id} was not found`);
-
-    return gameId; 
+    return infoGame;
+    /*const getGameById = peticion.map((info) => {
+        return {
+            id: info.id,
+            name: info.name,
+            description: info.description,
+            platforms: info.platforms,
+            background_image: info.background_image,
+            released: info.released,
+            rating: info.rating 
+        };
+    });*/
+   
+    //return getGameById
+    //if(!getGameById) throw new Error(`The game with the id: ${id} was not found`);
 };
 
 
 // PARA TRAER INFO DE LA API.
+
 const getGamesApi = async () => {
+    let pageGame = []; 
+    const url1 = (await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page=1`)).data;
+    const url2 = (await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page=2`)).data;
+    const url3 = (await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page=3`)).data;
+    const url4 = (await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page=4`)).data;
+    const url5 = (await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page=5`)).data;
+
+    pageGame = url1.results.concat(
+        url2.results,
+        url3.results,
+        url4.results,
+        url5.results 
+    );
+
+    const allGames = pageGame.map((game) => {
+        return {
+            id: game.id,
+            name: game.name,
+            platforms: game.parent_platforms,
+            rating: game.rating,
+            released: game.released 
+        };
+    });
+
+    return allGames; 
+};
+
+/*const getGamesApi = async () => {
     const peticion =  (await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}`)).data;
     const apiInfo = peticion.results.map((info) => {
         return {
@@ -57,6 +109,7 @@ const getGamesApi = async () => {
 
     return apiInfo; 
 };
+ */
 
 
 // PARA TRAER INFO DE LA DB.
