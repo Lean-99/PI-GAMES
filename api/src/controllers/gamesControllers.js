@@ -4,10 +4,10 @@ const { API_KEY } = process.env;
 
 
 // PARA CREAR VIDEOGAMES.
-const createGamesController = async (name, description, platforms, background_image, released, rating) => {
-    const newGame = await Videogames.create({name, description, platforms,background_image, released, rating});
+const createGamesController = async (name, description, platforms, image, released, rating) => {
+    const newGame = await Videogames.create({name, description, platforms, image, released, rating});
 
-    if(!name || !description || !platforms || !background_image || !released || !rating) {
+    if(!name || !description || !platforms || !image || !released || !rating) {
         throw new Error('All fields are required');
     }
 
@@ -39,7 +39,7 @@ const getGamesId = async (id) => {
         name: infoApi.name,
         description: infoApi.description,
         platforms: infoApi.parent_platforms,
-        background_image: infoApi.background_image,
+        image: infoApi.background_image,
         released: infoApi.released,
         rating: infoApi.rating,
         genres: infoApi.genres
@@ -85,6 +85,7 @@ const getGamesApi = async () => {
             id: game.id,
             name: game.name,
             platforms: game.parent_platforms,
+            image: game.background_image,
             rating: game.rating,
             released: game.released 
         };

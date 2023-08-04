@@ -2,10 +2,10 @@ const { allInfo, getGamesId, createGamesController } = require('../controllers/g
 
 
 const createGamesHandler = async (req, res) => {
-    const { name, description, platforms, background_image, released, rating } = req.body; 
+    const { name, description, platforms, image, released, rating } = req.body; 
     
     try {
-        const response = await createGamesController(name, description, platforms, background_image, released, rating); 
+        const response = await createGamesController(name, description, platforms, image, released, rating); 
         res.status(200).json(response);
     } catch (error) {
         res.status(400).json({error: error.message}); 
